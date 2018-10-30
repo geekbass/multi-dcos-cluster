@@ -89,11 +89,40 @@ module "dcos-install-3" {
   public_agents_os_user = "${module.dcos-publicagent-instances-3.os_user}"
   num_public_agents     = "${var.num_public_agents}"
 
-  dcos_install_mode         = "${var.dcos_install_mode}"
-  dcos_cluster_name         = "${var.cluster_name}-3"
-  dcos_version              = "${var.dcos_version}"
-  dcos_variant              = "${var.dcos_variant}"
-  dcos_license_key_contents = "${file("./license.txt")}"
+  dcos_install_mode              = "${var.dcos_install_mode}"
+  dcos_cluster_name              = "${var.cluster_name}-3"
+  dcos_version                   = "${var.dcos_version}"
+  dcos_variant                   = "${var.dcos_variant}"
+  dcos_license_key_contents      = "${file("./license.txt")}"
+  dcos_master_discovery          = "static"
+  dcos_exhibitor_storage_backend = "static"
+  dcos_ip_detect_public_filename = "/genconf/ip-detect-public"
+
+  dcos_ip_detect_public_contents = <<EOF
+#!/bin/sh
+set -o nounset -o errexit
+
+curl -fsSL http://whatismyip.akamai.com/
+EOF
+
+  dcos_ip_detect_contents = <<EOF
+#!/bin/sh
+# Example ip-detect script using an external authority
+# Uses the AWS Metadata Service to get the node's internal
+# ipv4 address
+curl -fsSL http://169.254.169.254/latest/meta-data/local-ipv4
+EOF
+
+  dcos_fault_domain_detect_contents = <<EOF
+#!/bin/sh
+set -o nounset -o errexit
+
+METADATA="$(curl http://169.254.169.254/latest/dynamic/instance-identity/document 2>/dev/null)"
+REGION=$(echo $METADATA | grep -Po "\"region\"\s+:\s+\"(.*?)\"" | cut -f2 -d:)
+ZONE=$(echo $METADATA | grep -Po "\"availabilityZone\"\s+:\s+\"(.*?)\"" | cut -f2 -d:)
+
+echo "{\"fault_domain\":{\"region\":{\"name\": $REGION},\"zone\":{\"name\": $ZONE}}}"
+EOF
 }
 
 ##############################################
@@ -106,12 +135,12 @@ locals {
   masters_ips-3        = "${join("\n", flatten(list(module.dcos-master-instances-3.public_ips)))}"
   private_agents_ips-3 = "${join("\n", flatten(list(module.dcos-privateagent-instances-3.public_ips)))}"
   public_agents_ips-3  = "${join("\n", flatten(list(module.dcos-publicagent-instances-3.public_ips)))}"
-  cluster_address-3    = "${module.dcos-elb-3.masters_internal_dns_name}"
+  cluster_address-3    = "${module.dcos-elb-3.masters_dns_name}"
   public-agent-lb-3    = "${module.dcos-elb-3.public_agents_dns_name}"
 }
 
 resource "local_file" "inventory-3" {
-  filename = "./dcos-3.txt"
+  filename = "./dcos-clusterinfo-3.txt"
 
   content = <<EOF
 
