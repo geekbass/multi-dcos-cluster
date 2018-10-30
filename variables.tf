@@ -1,4 +1,8 @@
 # Variables ALL REQUIRED
+data "http" "whatismyip" {
+  url = "http://whatismyip.akamai.com/"
+}
+
 variable "cluster_name" {
   description = ""
   default     = "dcos-train"
@@ -11,7 +15,7 @@ variable "subnet_range" {
 
 variable "admin_ips" {
   description = ""
-  default     = ["0.0.0.0/0"]
+  default     = ["${data.http.whatismyip.body}/32"]
 }
 
 variable "ssh_public_key_file" {
