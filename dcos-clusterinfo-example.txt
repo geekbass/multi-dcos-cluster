@@ -1,0 +1,25 @@
+[cluster]
+dcos-train-1
+
+[cluster-address]
+dcos-train-1-1668735482.us-east-1.elb.amazonaws.com
+
+User: bootstrapuser
+Pass: deleteme
+
+[bootstrap]
+34.32.0.9
+
+[masters]
+10.32.0.10
+
+[private-agents]
+11.55.0.11
+9.32.0.12
+34.5.0.13
+
+[public-agents]
+34.4.6.15
+
+[public-agent-lb]
+ext-dcos-train-1-1926946.us-east-1.elb.amazonaws.com
