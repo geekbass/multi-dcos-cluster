@@ -35,6 +35,7 @@ module "dcos-privateagent-instances-CLUSTER_NUMBER" {
   aws_subnet_ids         = ["${module.dcos-vpc.subnet_ids}"]
   aws_security_group_ids = ["${list(module.dcos-security-groups.internal, module.dcos-security-groups.admin)}"]
   aws_key_name           = "${var.cluster_name}-deployer-key"
+  aws_instance_type      = "m4.xlarge"
 
   num_private_agents = "${var.num_private_agents}"
 }
