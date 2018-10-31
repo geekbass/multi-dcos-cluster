@@ -16,7 +16,7 @@ Each cluster that is provisioned will also create a .txt file that contains IP i
 # Usage
 1) Pull down the repo
 
-2) Auth to the AWS
+2) Auth to the AWS, export default region and add your ssh keys.
 
 3) Modify the `admin_ips` in the `variables.tf` file to match your Public IPs from http://whatismyip.akamai.com/. [YO.UR.I.P/32]. This will be defaulted to 0.0.0.0/0 when we get the bug fixed. 
 
