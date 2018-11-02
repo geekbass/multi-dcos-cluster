@@ -11,6 +11,7 @@ module "dcos-bootstrap-instance-CLUSTER_NUMBER" {
   aws_subnet_ids         = ["${module.dcos-vpc.subnet_ids}"]
   aws_security_group_ids = ["${list(module.dcos-security-groups.internal, module.dcos-security-groups.admin)}"]
   aws_key_name           = "${var.cluster_name}-deployer-key"
+  aws_instance_type      = "${var.bootstrap_instance_type}"
 }
 
 # Master
@@ -22,6 +23,7 @@ module "dcos-master-instances-CLUSTER_NUMBER" {
   aws_subnet_ids         = ["${module.dcos-vpc.subnet_ids}"]
   aws_security_group_ids = ["${list(module.dcos-security-groups.internal, module.dcos-security-groups.admin)}"]
   aws_key_name           = "${var.cluster_name}-deployer-key"
+  aws_instance_type      = "${var.master_instance_type}"
 
   num_masters = "${var.num_masters}"
 }
@@ -35,7 +37,7 @@ module "dcos-privateagent-instances-CLUSTER_NUMBER" {
   aws_subnet_ids         = ["${module.dcos-vpc.subnet_ids}"]
   aws_security_group_ids = ["${list(module.dcos-security-groups.internal, module.dcos-security-groups.admin)}"]
   aws_key_name           = "${var.cluster_name}-deployer-key"
-  aws_instance_type      = "m4.xlarge"
+  aws_instance_type      = "${var.private_agent_instance_type}"
 
   num_private_agents = "${var.num_private_agents}"
 }
@@ -50,6 +52,7 @@ module "dcos-publicagent-instances-CLUSTER_NUMBER" {
   aws_security_group_ids = ["${list(module.dcos-security-groups.internal, module.dcos-security-groups.admin)}"]
 
   aws_key_name = "${var.cluster_name}-deployer-key"
+  aws_instance_type      = "${var.public_agent_instance_type}"
 
   num_public_agents = "${var.num_public_agents}"
 }

@@ -11,7 +11,7 @@ variable "subnet_range" {
 
 variable "admin_ips" {
   description = ""
-  default     = ["PUBLIC_IP_HERE"]
+  default     = ["0.0.0.0/0"]
 }
 
 variable "ssh_public_key_file" {
@@ -19,9 +19,19 @@ variable "ssh_public_key_file" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
+variable "bootstrap_instance_type" {
+  description = ""
+  default     = "t2.medium"
+}
+
 variable "num_masters" {
   description = ""
   default     = "1"
+}
+
+variable "master_instance_type" {
+  description = ""
+  default     = "m4.xlarge"
 }
 
 variable "num_private_agents" {
@@ -29,9 +39,19 @@ variable "num_private_agents" {
   default     = "1"
 }
 
+variable "private_agent_instance_type" {
+  description = ""
+  default     = "m4.xlarge"
+}
+
 variable "num_public_agents" {
   description = ""
   default     = "1"
+}
+
+variable "public_agent_instance_type" {
+  description = ""
+  default     = "t2.medium"
 }
 
 variable "dcos_install_mode" {
